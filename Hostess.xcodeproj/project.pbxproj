@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8F29ADEB135FE3BE000BAAD1 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8F29ADEA135FE3BE000BAAD1 /* main.cpp */; };
+		8F29ADF4135FE47E000BAAD1 /* NetworkingAPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8F29ADF2135FE47E000BAAD1 /* NetworkingAPI.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,6 +27,9 @@
 		8F29ADE6135FE3BE000BAAD1 /* Hostess */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Hostess; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F29ADEA135FE3BE000BAAD1 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8F29ADEC135FE3BE000BAAD1 /* Hostess.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Hostess.1; sourceTree = "<group>"; };
+		8F29ADF2135FE47E000BAAD1 /* NetworkingAPI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NetworkingAPI.cpp; sourceTree = "<group>"; };
+		8F29ADF3135FE47E000BAAD1 /* NetworkingAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkingAPI.h; sourceTree = "<group>"; };
+		8F29ADF5135FE786000BAAD1 /* ErrorCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErrorCodes.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +64,9 @@
 			children = (
 				8F29ADEA135FE3BE000BAAD1 /* main.cpp */,
 				8F29ADEC135FE3BE000BAAD1 /* Hostess.1 */,
+				8F29ADF2135FE47E000BAAD1 /* NetworkingAPI.cpp */,
+				8F29ADF3135FE47E000BAAD1 /* NetworkingAPI.h */,
+				8F29ADF5135FE786000BAAD1 /* ErrorCodes.h */,
 			);
 			path = Hostess;
 			sourceTree = "<group>";
@@ -115,6 +122,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8F29ADEB135FE3BE000BAAD1 /* main.cpp in Sources */,
+				8F29ADF4135FE47E000BAAD1 /* NetworkingAPI.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
