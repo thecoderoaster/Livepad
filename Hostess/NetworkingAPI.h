@@ -7,12 +7,19 @@
 //
 
 #include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
 #include <netinet/in.h>
+#include <netdb.h>
+#include <errno.h>
 #include "sys/time.h"
 #include "ErrorCodes.h"
 
-
 class NetworkingAPI{
+
+private:
+    NetworkingAPI();
+    ~NetworkingAPI();
     
 public:
     int m_sock;
@@ -26,8 +33,8 @@ public:
     struct sockaddr_in m_client;
     
     int SocketOpen(int domain, int type, int protocol);
-    int SocketBind(int sockfd, struct sockaddr **addr, int addrlen);
-    int SocketName(int sockfd, struct sockaddr **addr, int *addrlen);
+    int SocketBind(int sockfd, struct sockaddr_in *addr, int addrlen);
+    int SocketName(int sockfd, struct sockaddr_in *addr, int *addrlen);
     int SocketHostName(char *hostname, size_t size);
     int SocketWrite(int sockfd, char *ptr, int nbytes);
     int SocketRead(int sockfd, char *ptr, int nbytes);

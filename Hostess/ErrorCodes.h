@@ -13,5 +13,10 @@
 #define ERROR_SOCKDOMAIN                        1000
 #define ERROR_SOCKTYPE                          1001
 #define ERROR_SOCKPROTOCOL                      1002
-#define ERROR_SOCKETOPEN                        1000
+#define ERROR_SOCKINVALID                       1003
+#define ERROR_INVADDRLEN                        1004
+#define ERROR_INVADDRFAM                        1005
+#define ERROR_INVADDR                           1006
+#define ERROR_INVPORTNUM                        1007
+#define ERROR_INVZEROPAD                        1008
 
