@@ -7,7 +7,7 @@
 //
 
 //Success Codes GO HERE
-#define NORMAL                                  1
+#define NORMAL                                  0
 
 //Networking Codes GO HERE
 #define ERROR_SOCKDOMAIN                        1000
@@ -19,4 +19,5 @@
 #define ERROR_INVADDR                           1006
 #define ERROR_INVPORTNUM                        1007
 #define ERROR_INVZEROPAD                        1008
+#define ERROR_INVNAMELEN                        1009
 
