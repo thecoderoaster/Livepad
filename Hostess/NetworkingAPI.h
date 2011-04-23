@@ -9,24 +9,36 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/select.h>
 #include <sys/socket.h>
+#include <sys/types.h>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <errno.h>
+#include <openssl/crypto.h>
+#include <openssl/x509.h>
+#include <openssl/pem.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 #include "sys/time.h"
 #include "ErrorCodes.h"
+
+#define HTTPPORT        80          //port80
+#define SOCKTIMEOUT     5           //in seconds
+
 
 class NetworkingAPI{
 
 private:
-    NetworkingAPI();
-    ~NetworkingAPI();
+
     
 public:
+    NetworkingAPI();
+    ~NetworkingAPI();
     int m_sockfd;
     int m_msgsock;
     char m_hostname[80];
-    struct timeval m_to;
+    struct timespec m_to;
     struct hostent *m_hp;
     struct sockaddr_in m_name;
     struct sockaddr_in m_server;

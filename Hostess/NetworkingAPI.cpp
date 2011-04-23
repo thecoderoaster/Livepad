@@ -51,19 +51,19 @@ NetworkingAPI::~NetworkingAPI()
 //                  following error codes can be returned if you do not pass
 //                  in the right values:
 //              
-//                  12      :=      ENOMEM
-//                  13      :=      EACCES
-//                  23      :=      ENFILE
-//                  24      :=      EMFILE
-//                  41      :=      EPROTOTYPE
-//                  43      :=      EPROTONOSUPPORT
-//                  47      :=      EAFNOSUPPORT
-//                  55      :=      ENOBUFS
-//                  56      :=      EISCONN
+//                  -12      :=      ENOMEM
+//                  -13      :=      EACCES
+//                  -23      :=      ENFILE
+//                  -24      :=      EMFILE
+//                  -41      :=      EPROTOTYPE
+//                  -43      :=      EPROTONOSUPPORT
+//                  -47      :=      EAFNOSUPPORT
+//                  -55      :=      ENOBUFS
+//                  -56      :=      EISCONN
 //
-//                  1000    :=      ERROR_SOCKDOMAIN
-//                  1001    :=      ERROR_SOCKTYPE
-//                  1002    :=      ERROR_SOCKPROTOCOL
+//                  -1000    :=      ERROR_SOCKDOMAIN
+//                  -1001    :=      ERROR_SOCKTYPE
+//                  -1002    :=      ERROR_SOCKPROTOCOL
 // 
 //                  Refer to API Documentation for more details as to why you may
 //                  have received one of these codes.
@@ -73,22 +73,22 @@ int NetworkingAPI::SocketOpen(int domain, int type, int protocol)
     int sockfd = 0;
     
     //Sanity Check of Method Parameters
-    if(domain != PF_INET || domain != PF_INET6 || domain != PF_UNIX || 
-       domain != AF_INET || domain != AF_INET6)
+    if(domain != PF_INET && domain != PF_INET6 && domain != PF_UNIX && 
+       domain != AF_INET && domain != AF_INET6)
         return(ERROR_SOCKDOMAIN);
     
-    if(type != SOCK_STREAM || type != SOCK_DGRAM || type != SOCK_SEQPACKET || 
+    if(type != SOCK_STREAM && type != SOCK_DGRAM && type != SOCK_SEQPACKET && 
        type != SOCK_RAW)
         return(ERROR_SOCKTYPE);
     
-    if(protocol != IPPROTO_TCP || protocol != IPPROTO_UDP)
+    if(protocol != IPPROTO_TCP && protocol != IPPROTO_UDP)
         return(ERROR_SOCKPROTOCOL);
     
     //Create Socket
     if((sockfd = socket(domain, type, protocol)) < 0)
     {
         //**TODO** Log Error here
-        return(errno);
+        return(errno*-1);
     }
     
     return(sockfd);
@@ -126,30 +126,30 @@ int NetworkingAPI::SocketOpen(int domain, int type, int protocol)
 //                  the following error codes can be returned if you do not pass
 //                  in the right values:
 //
-//                  2       :=      ENOENT
-//                  5       :=      EIO
-//                  9       :=      EBADF
-//                  13      :=      EACCES
-//                  20      :=      ENOTDIR
-//                  21      :=      EISDIR
-//                  22      :=      EINVAL
-//                  30      :=      EROFS
-//                  38      :=      ENOTSOCK
-//                  39      :=      EDESTADDRREQ
-//                  45      :=      EOPNOTSUPP
-//                  47      :=      EAFNOSUPPORT
-//                  48      :=      EADDRINUSE
-//                  49      :=      EADDRNOTAVAIL
-//                  55      :=      ENOBUFS
-//                  56      :=      EISCONN
-//                  62      :=      ELOOP
-//                  63      :=      ENAMETOOLONG
+//                  -2       :=      ENOENT
+//                  -5       :=      EIO
+//                  -9       :=      EBADF
+//                  -13      :=      EACCES
+//                  -20      :=      ENOTDIR
+//                  -21      :=      EISDIR
+//                  -22      :=      EINVAL
+//                  -30      :=      EROFS
+//                  -38      :=      ENOTSOCK
+//                  -39      :=      EDESTADDRREQ
+//                  -45      :=      EOPNOTSUPP
+//                  -47      :=      EAFNOSUPPORT
+//                  -48      :=      EADDRINUSE
+//                  -49      :=      EADDRNOTAVAIL
+//                  -55      :=      ENOBUFS
+//                  -56      :=      EISCONN
+//                  -62      :=      ELOOP
+//                  -63      :=      ENAMETOOLONG
 //                  
-//                  1003    :=      ERROR_SOCKINVALID
-//                  1004    :=      ERROR_INVADDRFAM
-//                  1005    :=      ERROR_INVADDRLEN
-//                  1006    :=      ERROR_INVPORTNUM
-//                  1007    :=      ERROR_INVZEROPAD
+//                  -1003    :=      ERROR_SOCKINVALID
+//                  -1004    :=      ERROR_INVADDRFAM
+//                  -1005    :=      ERROR_INVADDRLEN
+//                  -1006    :=      ERROR_INVPORTNUM
+//                  -1007    :=      ERROR_INVZEROPAD
 // 
 //                  Refer to API Documentation for more details as to why you may
 //                  have received one of these codes.
@@ -159,14 +159,14 @@ int NetworkingAPI::SocketBind(int sockfd, struct sockaddr_in *addr, int addrlen)
     //Sanity Check of Method Parameters
     if(sockfd < 0)
         return(ERROR_SOCKINVALID);
-    if(addr->sin_family != AF_INET || addr->sin_family != AF_INET6)
+    if(addr->sin_family != AF_INET && addr->sin_family != AF_INET6)
         return(ERROR_INVADDRFAM);
     if(addr->sin_addr.s_addr != INADDR_ANY)
         return(ERROR_INVADDR);
-    if(addr->sin_port >= (uint16_t)0 && addr->sin_port <= (uint16_t)65535)
-        return(ERROR_INVPORTNUM);
-    if(strncmp(addr->sin_zero, "00000000", sizeof(addr->sin_zero)) != 0)
-        return(ERROR_INVZEROPAD);
+    //if(addr->sin_port >= (in_port_t)htons(0) && addr->sin_port <= (in_port_t)htons(65535))
+        //return(ERROR_INVPORTNUM);
+    //if(strncmp(addr->sin_zero, "00000000", sizeof(addr->sin_zero)) != 0)
+        //return(ERROR_INVZEROPAD);
     if(addrlen != sizeof(sockaddr_in))
         return(ERROR_INVADDRLEN);
     
@@ -175,7 +175,7 @@ int NetworkingAPI::SocketBind(int sockfd, struct sockaddr_in *addr, int addrlen)
     if(bind(sockfd, (sockaddr*)addr, addrlen) < 0)
     {
          //**TODO** Log Error here
-        return(errno);
+        return(errno*-1);
     }
     return(NORMAL);
 }
@@ -215,20 +215,20 @@ int NetworkingAPI::SocketBind(int sockfd, struct sockaddr_in *addr, int addrlen)
 //                  the following error codes can be returned if you do not pass
 //                  in the right values:
 //
-//                  9       :=      EBADF
-//                  14      :=      EFAULT
-//                  22      :=      EINVAL
-//                  38      :=      ENOTSOCK
-//                  45      :=      EOPNOTSUPP
-//                  55      :=      ENOBUFS
-//                  98      :=      ENOSR
+//                  -9       :=      EBADF
+//                  -14      :=      EFAULT
+//                  -22      :=      EINVAL
+//                  -38      :=      ENOTSOCK
+//                  -45      :=      EOPNOTSUPP
+//                  -55      :=      ENOBUFS
+//                  -98      :=      ENOSR
 
 //                  
-//                  1003    :=      ERROR_SOCKINVALID
-//                  1004    :=      ERROR_INVADDRFAM
-//                  1005    :=      ERROR_INVADDRLEN
-//                  1006    :=      ERROR_INVPORTNUM
-//                  1007    :=      ERROR_INVZEROPAD
+//                  -1003    :=      ERROR_SOCKINVALID
+//                  -1004    :=      ERROR_INVADDRFAM
+//                  -1005    :=      ERROR_INVADDRLEN
+//                  -1006    :=      ERROR_INVPORTNUM
+//                  -1007    :=      ERROR_INVZEROPAD
 // 
 //                  Refer to API Documentation for more details as to why you may
 //                  have received one of these codes.
@@ -280,7 +280,7 @@ int NetworkingAPI::SocketName(int sockfd, struct sockaddr_in *addr, socklen_t *a
 //
 //                  NO ERRORS SPECIFIED
 //                  
-//                  1008    :=      ERROR_INVNAMELEN
+//                  -1008    :=      ERROR_INVNAMELEN
 // 
 //                  Refer to API Documentation for more details as to why you may
 //                  have received one of these codes.
@@ -293,7 +293,7 @@ int NetworkingAPI::SocketHostName(char *hostname, size_t namelen)
     if(gethostname(hostname, namelen) < 0)
     {
         //**TODO** Log Error here
-        return(errno); 
+        return(errno*-1); 
     }
     
     return(NORMAL);
@@ -327,10 +327,10 @@ int NetworkingAPI::SocketHostName(char *hostname, size_t namelen)
 //                  error codes can be returned if you do not pass in the right 
 //                  values:
 //
-//                  1   :=      HOST_NOT_FOUND
-//                  2   :=      TRY_AGAIN
-//                  3   :=      NO_RECOVERY
-//                  4   :=      NO_DATA
+//                  -1   :=      HOST_NOT_FOUND
+//                  -2   :=      TRY_AGAIN
+//                  -3   :=      NO_RECOVERY
+//                  -4   :=      NO_DATA
 //                  
 // 
 //                  Refer to API Documentation for more details as to why you may
@@ -341,7 +341,7 @@ int NetworkingAPI::SocketHostByName(char *hostname, struct hostent* hp)
     if((hp = gethostbyname(hostname)) == NULL)
     {
         //**TODO** Log Error here
-        return(h_errno);    
+        return(h_errno*-1);    
     }
     
     return(NORMAL);
@@ -368,14 +368,14 @@ int NetworkingAPI::SocketHostByName(char *hostname, struct hostent* hp)
 //                  following error codes can be returned if you do not pass in 
 //                  the right values:
 //
-//                  4           :=      EINTR
-//                  5           :=      EIO
-//                  9           :=      EBADF
-//                  27          :=      EFBIG
-//                  28          :=      ENOSPC
-//                  32          :=      EPIPE
-//                  34          :=      ERANGE
-//                  35          :=      EAGAIN
+//                  -4           :=      EINTR
+//                  -5           :=      EIO
+//                  -9           :=      EBADF
+//                  -27          :=      EFBIG
+//                  -28          :=      ENOSPC
+//                  -32          :=      EPIPE
+//                  -34          :=      ERANGE
+//                  -35          :=      EAGAIN
 //                  
 //                  Refer to API Documentation for more details as to why you may
 //                  have received one of these codes.
@@ -391,7 +391,7 @@ ssize_t NetworkingAPI::SocketWrite(int sockfd, char *ptr, ssize_t nbytes)
         if((nwritten = write(sockfd, ptr, nleft)) < 0)
         {
             //**TODO** Log Error here
-            return(errno);
+            return(errno*-1);
         }
         nleft -= nwritten;
         ptr += nwritten;
@@ -420,14 +420,14 @@ ssize_t NetworkingAPI::SocketWrite(int sockfd, char *ptr, ssize_t nbytes)
 //                  following error codes can be returned if you do not pass in 
 //                  the right values:
 //
-//                  4           :=      EINTR
-//                  5           :=      EIO
-//                  9           :=      EBADF
-//                  21          :=      EISDIR
-//                  22          :=      EINVAL
-//                  35          :=      EAGAIN
-//                  84          :=      EOVERFLOW
-//                  94          :=      EBADMSG
+//                  -4           :=      EINTR
+//                  -5           :=      EIO
+//                  -9           :=      EBADF
+//                  -21          :=      EISDIR
+//                  -22          :=      EINVAL
+//                  -35          :=      EAGAIN
+//                  -84          :=      EOVERFLOW
+//                  -94          :=      EBADMSG
 //                  
 //                  Refer to API Documentation for more details as to why you may
 //                  have received one of these codes.
