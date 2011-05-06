@@ -12,6 +12,8 @@
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <sys/unistd.h>
+#include <sys/fcntl.h>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <errno.h>
@@ -26,6 +28,13 @@
 #define HTTPPORT        80          //port80
 #define SOCKTIMEOUT     5           //in seconds
 
+
+typedef struct ClientInfo{
+    
+    int msgsock;                    //Socket
+    int tid;                        //Thread ID
+    
+}CLIENTINFO;
 
 class NetworkingAPI{
 

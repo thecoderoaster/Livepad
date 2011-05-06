@@ -14,17 +14,51 @@
 void *ConnectionHandler(void *obj)
 {
     NetworkingAPI net;
-    int *msgsock = reinterpret_cast<int*>(obj);
-    //long tid = (long)threadid;
+    //int *msgsock = reinterpret_cast<int*>(obj);
+    CLIENTINFO *client = reinterpret_cast<CLIENTINFO*>(obj);
+    ssize_t ret = 0;
+    char htmlBuffer[363];
+    FILE *pFile = NULL;
     
-    std::cout << "Hostess(TID: ); INFO: Starting ConnectionHandler...\n";
-    std::cout << "Hostess(TID: ); INFO: socket = %d\n" << *msgsock;
+    //Clear Memory
+    memset(htmlBuffer, 0, sizeof(htmlBuffer));
     
-    //Send a response back
+    std::cout << "Hostess(TID: "<< client->tid << "); INFO: Starting ConnectionHandler...\n";
+    std::cout << "Hostess(TID: "<< client->tid << "); INFO: socket = "<< client->msgsock << "\n";
     
+    //Read in header
+    ret = net.SocketRead(client->msgsock, htmlBuffer, sizeof(htmlBuffer));
+    if(ret > 0)
+    {
+        std::cout<< "Hostess(TID:) read in " << ret << " bytes\n";        
+        std::cout<< "Hostess(TID: "<< client->tid << "); " << htmlBuffer << "\n";
+        //for(i = 0; i < sizeof(htmlBuffer); i++)
+            //printf("0x%x\n", htmlBuffer[i]);
+    }
+    else
+        std::cout<< "Hostess(TID: "<< client->tid << "); Header Missing!\n";
+        
+    //Read in test .html file
+    pFile = fopen("index.html", "r");
+    if(pFile == NULL)
+        perror("Error opening index.html!");
+    else
+    {
+        while(!feof(pFile))
+        {
+            fgets(htmlBuffer, 100, pFile);
+        }
+        fclose(pFile);
+        
+        //Notify Client
+        ret = net.SocketWrite(client->msgsock, htmlBuffer, sizeof(htmlBuffer));
+        std::cout << "Hostess(TID: "<< client->tid << "); INFO: Wrote back "<< ret << " bytes\n";
+        
+    }
+        
     //Wait for a message from client
 
-    std::cout << "Hostess(TID: ); INFO: Connection Closed.\n";
+    std::cout << "Hostess(TID: " << client->tid << "); INFO: Connection Closed.\n";
     pthread_exit(NULL);
 }
 
@@ -36,6 +70,8 @@ int main (int argc, const char * argv[])
     fd_set ready;
     sigset_t origmask;
     int sock                = 0;
+    int flags               = 0;
+    CLIENTINFO cInfo;
     
     //Thread Related
     pthread_t *threads;
@@ -137,8 +173,14 @@ int main (int argc, const char * argv[])
             }
             else
             {
+                //Set socket to NON_BLOCKING
+                flags = fcntl(sock, F_GETFL, O_ACCMODE);
+                fcntl(sock, F_SETFL, flags | O_NONBLOCK);
+                
                 //Spawn Thread
-                if(pthread_create(&threads[t++], NULL, ConnectionHandler, (void *)sock))
+                cInfo.msgsock = sock;
+                cInfo.tid = t;
+                if(pthread_create(&threads[t++], NULL, ConnectionHandler, (void *)&cInfo))
                 {
                     //Notify Management
                     //Log to file

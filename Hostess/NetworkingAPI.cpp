@@ -434,7 +434,31 @@ ssize_t NetworkingAPI::SocketWrite(int sockfd, char *ptr, ssize_t nbytes)
 /********************************************************************************/
 ssize_t NetworkingAPI::SocketRead(int sockfd, char *ptr, ssize_t nbytes)
 {
+    ssize_t nleft = 0;
     ssize_t nread = 0;
     
-    return(nread);
+    nleft = nbytes;
+    
+    while (nleft > 0) {
+        if((nread = read(sockfd, ptr, nleft)) < 0)
+        {
+            //**TODO** Log Error here
+            if(errno == EAGAIN)
+            {    
+                //Catch non-blocking error EAGAIN and ignore... All others:
+                break;
+            }
+            else
+            {
+                //All others...  
+                printf("error! Code: %d\n", errno);
+                return(errno*-1);
+            }
+        }
+        printf("read in %ld bytes\n", nread);
+        nleft -= nread;
+        ptr += nread;
+    }
+    return(nbytes-nleft);
+
 }
