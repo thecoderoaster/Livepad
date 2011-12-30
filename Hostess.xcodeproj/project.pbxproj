@@ -97,6 +97,7 @@
 		8F29ADDD135FE3BD000BAAD1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = "UNLV Grad Student";
 			};
 			buildConfigurationList = 8F29ADE0135FE3BD000BAAD1 /* Build configuration list for PBXProject "Hostess" */;
